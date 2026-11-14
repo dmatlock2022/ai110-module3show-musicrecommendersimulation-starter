@@ -17,17 +17,11 @@ Replace this paragraph with your own summary of what your version does.
 
 ## How The System Works
 
-Explain your design in plain language.
+Real music recommendation systems use information about songs and users to decide what someone may want to listen to next. My simplified recommender will compare a user's preferences to song features and give each song a score. For the first version, I will mainly use genre, mood, energy, and tempo. Songs that are closer to the user's preferred values will receive a higher score and will be recommended first.
 
-Some prompts to answer:
+For the scoring rule, genre and mood will get extra points when they match the user's preferences. Numerical features like energy and tempo will be scored based on how close the song is to the user's preferred value instead of simply rewarding higher values. After every song receives a score, the songs will be ranked from highest score to lowest score.
 
-- What features does each `Song` use in your system
-  - For example: genre, mood, energy, tempo
-- What information does your `UserProfile` store
-- How does your `Recommender` compute a score for each song
-- How do you choose which songs to recommend
-
-You can include a simple diagram or bullet list if helpful.
+A scoring rule decides how well one song matches the user's preferences. A ranking rule takes the scores for all songs and orders them from best match to worst match. This simplified system does not try to copy Spotify or TikTok exactly. It is meant to show how a few song features and user preferences can be turned into recommendations.
 
 ---
 
