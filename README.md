@@ -2,26 +2,95 @@
 
 ## Project Summary
 
-In this project you will build and explain a small music recommender system.
+This project is a small music recommender system that will compare a user's music preferences with features from a song catalog and rank songs based on how well they match.
 
-Your goal is to:
+The goal is to show, in a simple way, how recommendation systems turn information about users and items into scores and rankings. The project will also be used to test how changing feature weights can affect recommendations and potentially introduce bias.
 
-- Represent songs and a user "taste profile" as data
-- Design a scoring rule that turns that data into recommendations
-- Evaluate what your system gets right and wrong
-- Reflect on how this mirrors real world AI recommenders
-
-Replace this paragraph with your own summary of what your version does.
+For the first version, the recommender will mainly use genre, mood, and energy. Other song features such as tempo, valence, danceability, and acousticness are also included in the dataset and may be used in later experiments.
 
 ---
 
 ## How The System Works
 
-Real music recommendation systems use information about songs and users to decide what someone may want to listen to next. My simplified recommender will compare a user's preferences to song features and give each song a score. For the first version, I will mainly use genre, mood, energy, and tempo. Songs that are closer to the user's preferred values will receive a higher score and will be recommended first.
+Real music recommendation systems use information about songs and users to decide what someone may want to listen to next. My simplified recommender compares a user's preferences to song features and gives each song a score.
 
-For the scoring rule, genre and mood will get extra points when they match the user's preferences. Numerical features like energy and tempo will be scored based on how close the song is to the user's preferred value instead of simply rewarding higher values. After every song receives a score, the songs will be ranked from highest score to lowest score.
+The song catalog includes:
 
-A scoring rule decides how well one song matches the user's preferences. A ranking rule takes the scores for all songs and orders them from best match to worst match. This simplified system does not try to copy Spotify or TikTok exactly. It is meant to show how a few song features and user preferences can be turned into recommendations.
+- Genre
+- Mood
+- Energy
+- Tempo
+- Valence
+- Danceability
+- Acousticness
+
+For the first version of the scoring algorithm, I will use genre, mood, and energy.
+
+The sample user profile is:
+
+- Favorite genre: pop
+- Favorite mood: happy
+- Target energy: 0.8
+
+### Algorithm Recipe
+
+Each song starts with a score of 0.
+
+- Add **2 points** if the song's genre matches the user's favorite genre.
+- Add **1.5 points** if the song's mood matches the user's favorite mood.
+- Add an energy similarity score using:
+
+```text
+1 - abs(song energy - target energy)
+```
+
+After every song receives a score, the songs are ranked from highest score to lowest score. The highest-scoring songs become the recommendations.
+
+A scoring rule decides how well one individual song matches the user's preferences. A ranking rule compares the scores for all songs and determines the order of the recommendations.
+
+### Basic Flow
+
+```text
+User Preferences + Song Catalog
+              |
+              v
+       Score Each Song
+              |
+              v
+        Rank by Score
+              |
+              v
+     Top Recommendations
+```
+
+One limitation of this design is that genre and mood receive fixed bonus points, so they may have more influence than other features. A good song could receive a lower score simply because its genre does not exactly match the user's favorite genre.
+
+Later in the project, I will test different weights and compare how the recommendation results change.
+
+---
+
+## Song Dataset
+
+The starter dataset contains song information stored in:
+
+```text
+data/songs.csv
+```
+
+Each song includes:
+
+- `id`
+- `title`
+- `artist`
+- `genre`
+- `mood`
+- `energy`
+- `tempo_bpm`
+- `valence`
+- `danceability`
+- `acousticness`
+
+I expanded the starter catalog so the recommender has more songs to compare when the scoring system is implemented.
 
 ---
 
@@ -29,88 +98,110 @@ A scoring rule decides how well one song matches the user's preferences. A ranki
 
 ### Setup
 
-1. Create a virtual environment (optional but recommended):
+Create a virtual environment if desired:
 
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate      # Mac or Linux
-   .venv\Scripts\activate         # Windows
+```bash
+python -m venv .venv
+```
 
-2. Install dependencies
+Activate it on Windows:
+
+```bash
+.venv\Scripts\activate
+```
+
+Install the required dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Run the app:
+### Run the App
+
+Once the recommendation logic is implemented, run:
 
 ```bash
 python -m src.main
 ```
 
-### Running Tests
+---
 
-Run the starter tests with:
+## Running Tests
+
+The starter project includes automated tests.
+
+Run them with:
 
 ```bash
 pytest
 ```
 
-You can add more tests in `tests/test_recommender.py`.
+Additional tests will be added as the recommendation algorithm is implemented.
 
 ---
 
 ## Sample Recommendation Output
 
-Paste a sample of your recommender's output here as a text block so a reader can see what it produces:
+The recommendation logic has not been implemented yet.
 
-```
-# e.g.:
-# User profile: genre=indie, mood=chill, energy=low
-# Recommendations:
-#   1. ...
-#   2. ...
-#   3. ...
+A later version will produce output similar to:
+
+```text
+User profile:
+genre = pop
+mood = happy
+energy = 0.8
+
+Top recommendations:
+1. Song title - Score: ...
+2. Song title - Score: ...
+3. Song title - Score: ...
 ```
 
-**Screenshot or video** *(optional)*: <!-- Insert a screenshot or demo video link here -->
+This section will be updated after the recommender is working.
 
 ---
 
 ## Experiments You Tried
 
-Use this section to document the experiments you ran. For example:
+Experiments will be added after the first scoring algorithm is implemented.
 
-- What happened when you changed the weight on genre from 2.0 to 0.5
-- What happened when you added tempo or valence to the score
-- How did your system behave for different types of users
+Planned experiments include:
+
+- Changing the genre weight
+- Changing the mood weight
+- Comparing different target energy values
+- Testing different user profiles
+- Comparing how the recommendation ranking changes
+
+These experiments will help show how small changes in the scoring rule can strongly affect what the system recommends.
 
 ---
 
 ## Limitations and Risks
 
-Summarize some limitations of your recommender.
+The current design has several limitations:
 
-Examples:
+- It uses a very small song catalog.
+- Genre and mood are simplified into single labels.
+- The system does not understand lyrics.
+- It does not learn from actual user listening history.
+- Fixed scoring weights may cause certain features to influence the results too strongly.
+- Exact genre matches may be favored over songs that a user could still enjoy.
+- The recommender does not yet account for the diversity of the final recommendation list.
 
-- It only works on a tiny catalog
-- It does not understand lyrics or language
-- It might over favor one genre or mood
-
-You will go deeper on this in your model card.
+These limitations will be explored more as the recommendation algorithm is tested.
 
 ---
 
 ## Reflection
 
-Read and complete `model_card.md`:
+The full project reflection will be completed later after the recommender has been implemented and tested.
+
+So far, I have learned that a recommender needs two separate ideas: a scoring rule and a ranking rule. The scoring rule determines how well one item matches a user's preferences, while the ranking rule decides which of those items should appear first.
+
+I also learned that the weights chosen for different features can strongly affect the result. Even a simple rule such as giving extra points for genre can cause the system to repeatedly favor certain types of music. This means that recommendation systems are influenced by the choices made when designing their algorithms.
+
+See the model card for the full evaluation and reflection later in the project:
 
 [**Model Card**](model_card.md)
-
-Write 1 to 2 paragraphs here about what you learned:
-
-- about how recommenders turn data into predictions
-- about where bias or unfairness could show up in systems like this
-
-
-
