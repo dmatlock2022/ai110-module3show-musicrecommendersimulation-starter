@@ -2,11 +2,11 @@
 
 ## Project Summary
 
-This project is a small music recommender system that will compare a user's music preferences with features from a song catalog and rank songs based on how well they match.
+This project is a small music recommender system that compares a user's music preferences with features from a song catalog and ranks songs based on how well they match.
 
 The goal is to show, in a simple way, how recommendation systems turn information about users and items into scores and rankings. The project will also be used to test how changing feature weights can affect recommendations and potentially introduce bias.
 
-For the first version, the recommender will mainly use genre, mood, and energy. Other song features such as tempo, valence, danceability, and acousticness are also included in the dataset and may be used in later experiments.
+For the first version, the recommender mainly uses genre, mood, and energy. Other song features such as tempo, valence, danceability, and acousticness are also included in the dataset and may be used in later experiments.
 
 ---
 
@@ -24,7 +24,7 @@ The song catalog includes:
 - Danceability
 - Acousticness
 
-For the first version of the scoring algorithm, I will use genre, mood, and energy.
+For the first version of the scoring algorithm, the system uses genre, mood, and energy.
 
 The sample user profile is:
 
@@ -63,7 +63,7 @@ User Preferences + Song Catalog
      Top Recommendations
 ```
 
-One limitation of this design is that genre and mood receive fixed bonus points, so they may have more influence than other features. A good song could receive a lower score simply because its genre does not exactly match the user's favorite genre.
+One limitation of this design is that genre and mood receive fixed bonus points, so they may have more influence than other song features. A good song could receive a lower score simply because its genre does not exactly match the user's favorite genre.
 
 Later in the project, I will test different weights and compare how the recommendation results change.
 
@@ -71,7 +71,7 @@ Later in the project, I will test different weights and compare how the recommen
 
 ## Song Dataset
 
-The starter dataset contains song information stored in:
+The song information is stored in:
 
 ```text
 data/songs.csv
@@ -90,7 +90,32 @@ Each song includes:
 - `danceability`
 - `acousticness`
 
-I expanded the starter catalog so the recommender has more songs to compare when the scoring system is implemented.
+I expanded the starter catalog from 10 songs to 15 songs so the recommender has more options to compare.
+
+---
+
+## Implementation
+
+The main recommendation logic is located in:
+
+```text
+src/recommender.py
+```
+
+The project currently includes:
+
+- Loading songs from the CSV file
+- Converting numerical song values into Python numbers
+- Scoring songs based on genre, mood, and energy
+- Ranking songs from highest score to lowest score
+- Returning the top recommendations
+- Providing a short explanation for each recommendation
+
+The command-line runner is located in:
+
+```text
+src/main.py
+```
 
 ---
 
@@ -116,9 +141,9 @@ Install the required dependencies:
 pip install -r requirements.txt
 ```
 
-### Run the App
+### Run the Recommender
 
-Once the recommendation logic is implemented, run:
+Run the recommender with:
 
 ```bash
 python -m src.main
@@ -133,18 +158,26 @@ The starter project includes automated tests.
 Run them with:
 
 ```bash
-pytest
+python -m pytest
 ```
 
-Additional tests will be added as the recommendation algorithm is implemented.
+The current tests verify that:
+
+- Songs are ranked by score
+- The song that best matches the sample user appears first
+- Recommendation explanations return a non-empty string
+
+Current test result:
+
+```text
+2 passed
+```
 
 ---
 
 ## Sample Recommendation Output
 
-The recommendation logic has not been implemented yet.
-
-A later version will produce output similar to:
+The first version of the recommendation logic is now implemented using genre, mood, and energy.
 
 ```text
 User profile:
@@ -153,18 +186,30 @@ mood = happy
 energy = 0.8
 
 Top recommendations:
-1. Song title - Score: ...
-2. Song title - Score: ...
-3. Song title - Score: ...
+
+Sunrise City - Score: 4.48
+Because: genre matches, mood matches, energy similarity 0.98
+
+Gym Hero - Score: 2.87
+Because: genre matches, energy similarity 0.87
+
+Open Highway - Score: 2.49
+Because: mood matches, energy similarity 0.99
+
+Rooftop Lights - Score: 2.46
+Because: mood matches, energy similarity 0.96
+
+Golden Hour - Score: 2.38
+Because: mood matches, energy similarity 0.88
 ```
 
-This section will be updated after the recommender is working.
+The current results show how the fixed feature weights affect the ranking. Sunrise City receives the highest score because it matches both the preferred genre and mood while also having an energy level very close to the target.
 
 ---
 
 ## Experiments You Tried
 
-Experiments will be added after the first scoring algorithm is implemented.
+The first scoring algorithm is now working. The next part of the project will test how the recommendations change when the user profile or feature weights change.
 
 Planned experiments include:
 
@@ -180,7 +225,7 @@ These experiments will help show how small changes in the scoring rule can stron
 
 ## Limitations and Risks
 
-The current design has several limitations:
+The current recommender has several limitations:
 
 - It uses a very small song catalog.
 - Genre and mood are simplified into single labels.
@@ -188,19 +233,20 @@ The current design has several limitations:
 - It does not learn from actual user listening history.
 - Fixed scoring weights may cause certain features to influence the results too strongly.
 - Exact genre matches may be favored over songs that a user could still enjoy.
-- The recommender does not yet account for the diversity of the final recommendation list.
+- The recommender does not currently consider diversity in the final recommendation list.
+- Some useful song features in the dataset are not yet used by the scoring algorithm.
 
-These limitations will be explored more as the recommendation algorithm is tested.
+These limitations will be explored more during the evaluation phase.
 
 ---
 
 ## Reflection
 
-The full project reflection will be completed later after the recommender has been implemented and tested.
-
 So far, I have learned that a recommender needs two separate ideas: a scoring rule and a ranking rule. The scoring rule determines how well one item matches a user's preferences, while the ranking rule decides which of those items should appear first.
 
-I also learned that the weights chosen for different features can strongly affect the result. Even a simple rule such as giving extra points for genre can cause the system to repeatedly favor certain types of music. This means that recommendation systems are influenced by the choices made when designing their algorithms.
+I also learned that the weights chosen for different features can strongly affect the final result. In the current version, genre receives more weight than mood or energy. This causes songs with a matching genre to receive a large advantage even if another song may have a very similar mood or energy level.
+
+The next part of the project will focus on testing different user profiles and scoring weights to see where the recommender performs well and where its design may introduce bias or unexpected results.
 
 See the model card for the full evaluation and reflection later in the project:
 
