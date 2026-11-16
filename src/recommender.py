@@ -48,13 +48,18 @@ class Recommender:
         def get_score(song):
             score = 0
 
+            # Experiment: lower the genre weight
             if song.genre == user.favorite_genre:
-                score += 2
+                score += 1
 
             if song.mood == user.favorite_mood:
                 score += 1.5
 
-            score += 1 - abs(song.energy - user.target_energy)
+            # Experiment: make energy twice as important
+            energy_similarity = 1 - abs(
+                song.energy - user.target_energy
+            )
+            score += 2 * energy_similarity
 
             return score
 
@@ -76,10 +81,14 @@ class Recommender:
         if song.mood == user.favorite_mood:
             reasons.append("mood matches")
 
-        energy_difference = abs(song.energy - user.target_energy)
+        energy_difference = abs(
+            song.energy - user.target_energy
+        )
 
         if energy_difference <= 0.15:
-            reasons.append("energy is close to your preference")
+            reasons.append(
+                "energy is close to your preference"
+            )
 
         if not reasons:
             return "This song had one of the higher overall scores."
@@ -107,13 +116,17 @@ def load_songs(csv_path: str) -> List[Dict]:
     return songs
 
 
-def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
+def score_song(
+    user_prefs: Dict,
+    song: Dict
+) -> Tuple[float, List[str]]:
     """Score one song based on the user's preferences."""
     score = 0
     reasons = []
 
+    # Experiment: lower the genre weight
     if song["genre"] == user_prefs["genre"]:
-        score += 2
+        score += 1
         reasons.append("genre matches")
 
     if song["mood"] == user_prefs["mood"]:
@@ -124,7 +137,9 @@ def score_song(user_prefs: Dict, song: Dict) -> Tuple[float, List[str]]:
         song["energy"] - user_prefs["energy"]
     )
 
-    score += energy_similarity
+    # Experiment: make energy twice as important
+    score += 2 * energy_similarity
+
     reasons.append(
         f"energy similarity {energy_similarity:.2f}"
     )
@@ -141,7 +156,10 @@ def recommend_songs(
     scored_songs = []
 
     for song in songs:
-        score, reasons = score_song(user_prefs, song)
+        score, reasons = score_song(
+            user_prefs,
+            song
+        )
 
         explanation = ", ".join(reasons)
 
