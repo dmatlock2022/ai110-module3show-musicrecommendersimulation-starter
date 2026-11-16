@@ -202,3 +202,7 @@ Before this project, I mostly thought of music recommendations as simply finding
 The most interesting part was changing the scoring weights and watching the ranking change. Nothing about the song data changed, but changing the importance of genre and energy caused different songs to move higher or lower.
 
 That showed me how bias can appear in a recommendation system even when the code is simple. The system is not completely objective because its results depend on the decisions made when designing the algorithm.
+
+I used AI to help me think through the scoring formula, test different feature weights, and explain the results. I still had to verify the suggestions by running the recommender and comparing the rankings myself. The weight experiment was especially useful because it showed that an AI suggestion can sound reasonable, but I still need to check how the actual output changes before deciding whether to keep it.
+
+I was also surprised by how a simple weighted scoring formula could still produce recommendations that felt believable. If I extended the project, I would add more song features and user behavior so the recommender could make more personalized decisions instead of relying on the same fixed weights for every user.
